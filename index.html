@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Name to Google Sheets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>নাম লিখুন</h2>
+        <input type="text" id="nameInput" placeholder="আপনার নাম" required>
+        <br><br>
+        <button onclick="submitName()">Submit</button>
+    </div>
+
+    <script>
+        async function submitName() {
+            const name = document.getElementById('nameInput').value;
+            if (!name) {
+                alert("দয়া করে নাম লিখুন!");
+                return;
+            }
+
+            const confirmSubmit = confirm(`আপনার নাম "${name}" Google Sheet-এ জমা দিতে চান?`);
+            if (!confirmSubmit) return;
+
+            try {
+                const response = await fetch('submit_name', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name }),
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('নাম সফলভাবে Google Sheet-এ জমা হয়েছে!');
+                } else {
+                    alert('ডাটা জমা করতে সমস্যা হয়েছে।');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('ডাটা পাঠাতে সমস্যা হয়েছে।');
+            }
+        }
+    </script>
+</body>
+</html>
